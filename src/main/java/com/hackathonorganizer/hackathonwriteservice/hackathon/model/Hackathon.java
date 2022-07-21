@@ -1,5 +1,6 @@
 package com.hackathonorganizer.hackathonwriteservice.hackathon.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hackathonorganizer.hackathonwriteservice.team.model.Team;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,9 +27,11 @@ public class Hackathon {
     private String organizerInfo;
 
     @NotNull
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime eventStartDate;
 
     @NotNull
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime eventEndDate;
 
     @OneToMany(mappedBy = "hackathon")
