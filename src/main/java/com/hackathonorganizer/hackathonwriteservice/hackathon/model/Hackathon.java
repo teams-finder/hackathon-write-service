@@ -2,8 +2,7 @@ package com.hackathonorganizer.hackathonwriteservice.hackathon.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hackathonorganizer.hackathonwriteservice.team.model.Team;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -14,6 +13,9 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Hackathon {
 
     @Id
@@ -21,17 +23,22 @@ public class Hackathon {
     private Long id;
 
     @NotEmpty
+    private String name;
+
+    @NotEmpty
     private String description;
 
     @NotEmpty
     private String organizerInfo;
 
+    private boolean isActive = true;
+
     @NotNull
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="HH:mm:ss dd-MM-yyyy")
     private LocalDateTime eventStartDate;
 
     @NotNull
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="HH:mm:ss dd-MM-yyyy")
     private LocalDateTime eventEndDate;
 
     @OneToMany(mappedBy = "hackathon")

@@ -5,12 +5,11 @@ import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
 import org.keycloak.adapters.springsecurity.KeycloakSecurityComponents;
 import org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticationProvider;
 import org.keycloak.adapters.springsecurity.config.KeycloakWebSecurityConfigurerAdapter;
-import org.keycloak.adapters.springsecurity.management.HttpSessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -26,7 +25,6 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) {
-
         KeycloakAuthenticationProvider keycloakAuthenticationProvider
                 = keycloakAuthenticationProvider();
         keycloakAuthenticationProvider.setGrantedAuthoritiesMapper(
@@ -44,12 +42,13 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         super.configure(http);
-        http.csrf().disable();
+        http.csrf().disable().cors().disable();
 
         http.authorizeRequests()
-                .antMatchers("/api/v1/**")
-                .hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/v1/hackathon").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PATCH, "/api/v1/hackathon/**")
+                .hasAnyRole("ADMIN", "ORGANIZER")
                 .anyRequest()
-                .permitAll();
+                .authenticated();
     }
 }
