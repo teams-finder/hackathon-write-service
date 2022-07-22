@@ -36,8 +36,6 @@ public class HackathonController {
     @PatchMapping("/{id}/deactivate")
     public ResponseEntity<String> deactivateHackathon(@PathVariable("id") Long hackathonId) {
 
-        System.out.println(hackathonId);
-
         String hackathonStatus = hackathonService.deactivateHackathon(hackathonId);
 
         return new ResponseEntity<>("hackathonStatus", HttpStatus.ACCEPTED);
