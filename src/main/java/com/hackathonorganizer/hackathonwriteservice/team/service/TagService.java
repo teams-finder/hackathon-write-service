@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +36,7 @@ public class TagService {
     }
 
     public void deleteById(Long id) {
-        if(tagRepository.existsById(id)) {
+        if (tagRepository.existsById(id)) {
             tagRepository.deleteById(id);
         } else {
             throw new ResourceNotFoundException(String.format("Tag id = %d not found", id));
@@ -46,12 +45,20 @@ public class TagService {
     }
 
 
-    private boolean existsByName(String name) {
+    protected boolean existsByName(String name) {
         if (tagRepository.existsByNameIgnoreCase(name)) {
             log.error("Tag name {} already exists", name);
             throw new ResourceAlreadyExistsException(String.format("Tag name %s already exists", name));
         }
         return false;
+    }
+
+    protected Tag findByName(String name) {
+        return tagRepository.findByNameIgnoreCase(name)
+                .orElseThrow(() -> {
+                    log.error(String.format("Tag name %s not found", name));
+                    throw new ResourceAlreadyExistsException(String.format("Tag name %s not found", name));
+                });
     }
 
 
