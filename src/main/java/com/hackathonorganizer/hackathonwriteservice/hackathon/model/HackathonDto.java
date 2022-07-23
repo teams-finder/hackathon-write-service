@@ -1,14 +1,7 @@
 package com.hackathonorganizer.hackathonwriteservice.hackathon.model;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
-@Getter
-@Setter
-@Builder
-public class HackathonDto {
-    private Long id;
-    private String name;
-    private String description;
+public record HackathonDto(@NotNull Long id, @NotEmpty String name, @NotEmpty String description) {
 }

@@ -1,6 +1,6 @@
 package com.hackathonorganizer.hackathonwriteservice.hackathon.service;
 
-import com.hackathonorganizer.hackathonwriteservice.hackathon.exception.HackathonException;
+import com.hackathonorganizer.hackathonwriteservice.hackathon.exception.HackathonNotFoundException;
 import com.hackathonorganizer.hackathonwriteservice.hackathon.model.Hackathon;
 import com.hackathonorganizer.hackathonwriteservice.hackathon.model.HackathonDto;
 import com.hackathonorganizer.hackathonwriteservice.hackathon.model.repository.HackathonRepository;
@@ -25,19 +25,23 @@ public class HackathonService {
         return mapHackathonToDto(savedHackathon);
     }
 
-    public HackathonDto updateHackathonData(Hackathon updatedHackathon) {
+    public HackathonDto updateHackathonData(Hackathon hackatonUpdatedData) {
 
-        Hackathon hackathon = hackathonRepository.findById(updatedHackathon.getId())
-                .orElseThrow(() -> new HackathonException("Hackathon with id: " + updatedHackathon.getId() + " not found",
-                        HttpStatus.NOT_FOUND));
+        Hackathon hackathon = hackathonRepository.findById(hackatonUpdatedData.getId())
+                .orElseThrow(() -> new HackathonNotFoundException(hackatonUpdatedData.getId()));
 
-        hackathon.setName(updatedHackathon.getName());
-        hackathon.setDescription(updatedHackathon.getDescription());
-        hackathon.setOrganizerInfo(updatedHackathon.getOrganizerInfo());
-        hackathon.setEventStartDate(updatedHackathon.getEventStartDate());
-        hackathon.setEventEndDate(updatedHackathon.getEventEndDate());
+        Hackathon.HackathonBuilder hackathonBuilder = hackathon.toBuilder();
 
-        Hackathon savedHackathon = hackathonRepository.save(hackathon);
+        Hackathon updatedHackathon = hackathonBuilder
+                .name(hackatonUpdatedData.getName())
+                .description(hackatonUpdatedData.getDescription())
+                .organizerInfo(hackatonUpdatedData.getOrganizerInfo())
+                .eventStartDate(hackatonUpdatedData.getEventStartDate())
+                .eventEndDate(hackatonUpdatedData.getEventEndDate())
+                .build();
+
+
+        Hackathon savedHackathon = hackathonRepository.save(updatedHackathon);
 
         log.info("Hackathon with id: " + savedHackathon.getId() + " updated successfully");
 
@@ -47,8 +51,7 @@ public class HackathonService {
     public String deactivateHackathon(Long hackathonId) {
 
         Hackathon hackathon = hackathonRepository.findById(hackathonId)
-                .orElseThrow(() -> new HackathonException("Hackathon with id: " + hackathonId + " not found",
-                        HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new HackathonNotFoundException(hackathonId));
 
         hackathon.setActive(false);
 
@@ -61,7 +64,6 @@ public class HackathonService {
 
     private HackathonDto mapHackathonToDto(Hackathon hackathon) {
 
-        return HackathonDto.builder().id(hackathon.getId()).name(hackathon.getName())
-                .description(hackathon.getDescription()).build();
+        return new HackathonDto(hackathon.getId(), hackathon.getName(), hackathon.getDescription());
     }
 }
