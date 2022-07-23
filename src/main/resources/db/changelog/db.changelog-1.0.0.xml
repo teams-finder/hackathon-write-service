@@ -78,5 +78,9 @@
 
         <addForeignKeyConstraint baseTableName="team_tags" baseColumnNames="tag_id" constraintName="fk_team_tags_tag_id" referencedTableName="tag"
                                  referencedColumnNames="id" onUpdate="RESTRICT" onDelete="RESTRICT"/>
+
+        <addForeignKeyConstraint constraintName="fk_team_tag_id" referencedTableName="team"
+                                 baseColumnNames="team_id"
+                                 baseTableName="team_tags" referencedColumnNames="id" onUpdate="RESTRICT" onDelete="RESTRICT"/>
     </changeSet>
 </databaseChangeLog>

@@ -1,8 +1,7 @@
 package com.hackathonorganizer.hackathonwriteservice.hackathon.model;
 
 import com.hackathonorganizer.hackathonwriteservice.team.model.Team;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -13,6 +12,9 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Hackathon {
 
     @Id
