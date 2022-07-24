@@ -8,8 +8,8 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 @EnableEurekaClient
 public class HackathonWriteServiceApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(HackathonWriteServiceApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(HackathonWriteServiceApplication.class, args);
+    }
 
 }

@@ -2,7 +2,6 @@ package com.hackathonorganizer.hackathonwriteservice.team.controller;
 
 import com.hackathonorganizer.hackathonwriteservice.team.model.Tag;
 import com.hackathonorganizer.hackathonwriteservice.team.model.dto.TagRequest;
-import com.hackathonorganizer.hackathonwriteservice.team.repository.TagRepository;
 import com.hackathonorganizer.hackathonwriteservice.team.service.TagService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,7 +1,6 @@
 package com.hackathonorganizer.hackathonwriteservice.team.model.dto;
 
 
-
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
