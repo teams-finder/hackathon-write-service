@@ -1,12 +1,14 @@
 package com.hackathonorganizer.hackathonwriteservice.hackathon.service;
 
-import com.hackathonorganizer.hackathonwriteservice.hackathon.exception.ResourceNotFoundException;
+import com.hackathonorganizer.hackathonwriteservice.hackathon.exception.HackathonException;
 import com.hackathonorganizer.hackathonwriteservice.hackathon.model.Hackathon;
-import com.hackathonorganizer.hackathonwriteservice.hackathon.model.HackathonDto;
+import com.hackathonorganizer.hackathonwriteservice.hackathon.model.dto.HackathonResponse;
+import com.hackathonorganizer.hackathonwriteservice.hackathon.model.dto.HackathonRequest;
 import com.hackathonorganizer.hackathonwriteservice.hackathon.repository.HackathonRepository;
 import com.hackathonorganizer.hackathonwriteservice.hackathon.utils.HackathonMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,49 +18,49 @@ public class HackathonService {
 
     private final HackathonRepository hackathonRepository;
 
-    public HackathonDto createHackathon(Hackathon hackathon) {
+    public HackathonResponse createHackathon(Hackathon hackathon) {
 
-        Hackathon savedHackathon = hackathonRepository.save(hackathon);
+        Hackathon savedHackathon = saveToRepository(hackathon);
 
-        log.info("Hackathon with id: " + savedHackathon.getId() + " saved successfully");
+        log.info("Hackathon with id: {} saved successfully", savedHackathon.getId());
 
-        return HackathonMapper.mapHackathonToDto(savedHackathon);
+        return HackathonMapper.mapToDto(savedHackathon);
     }
 
-    public HackathonDto updateHackathonData(Hackathon hackathonUpdatedData) {
+    public HackathonResponse updateHackathonData(Long hackathonId, HackathonRequest hackathonUpdatedData) {
 
-        Hackathon hackathon = hackathonRepository.findById(hackathonUpdatedData.getId())
+        Hackathon hackathon = hackathonRepository.findById(hackathonId)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException(String.format("Hackathon with id: %d not found", hackathonUpdatedData.getId())));
+                        new HackathonException(String.format("Hackathon with id: %d not found",hackathonId),
+                                HttpStatus.NOT_FOUND));
 
-        Hackathon.HackathonBuilder hackathonBuilder = hackathon.toBuilder();
-
-        Hackathon updatedHackathon = hackathonBuilder
-                .name(hackathonUpdatedData.getName())
-                .description(hackathonUpdatedData.getDescription())
-                .organizerInfo(hackathonUpdatedData.getOrganizerInfo())
-                .eventStartDate(hackathonUpdatedData.getEventStartDate())
-                .eventEndDate(hackathonUpdatedData.getEventEndDate())
+        Hackathon updatedHackathon = hackathon.toBuilder()
+                .name(hackathonUpdatedData.name())
+                .description(hackathonUpdatedData.description())
+                .organizerInfo(hackathonUpdatedData.organizerInfo())
+                .eventStartDate(hackathonUpdatedData.eventStartDate())
+                .eventEndDate(hackathonUpdatedData.eventEndDate())
                 .build();
 
 
-        Hackathon savedHackathon = hackathonRepository.save(updatedHackathon);
+        Hackathon savedHackathon = saveToRepository(updatedHackathon);
 
-        log.info("Hackathon with id: " + savedHackathon.getId() + " updated successfully");
+        log.info("Hackathon with id: {} updated successfully", savedHackathon.getId());
 
-        return HackathonMapper.mapHackathonToDto(savedHackathon);
+        return HackathonMapper.mapToDto(savedHackathon);
     }
 
     public String deactivateHackathon(Long hackathonId) {
 
         Hackathon hackathon = hackathonRepository.findById(hackathonId)
-                .orElseThrow(() -> new ResourceNotFoundException(String.format("Hackathon with id: %d not found", hackathonId)));
+                .orElseThrow(() -> new HackathonException(String.format("Hackathon with id: %d not found", hackathonId),
+                        HttpStatus.NOT_FOUND));
 
         hackathon.setActive(false);
 
-        hackathonRepository.save(hackathon);
+        saveToRepository(hackathon);
 
-        log.info("Hackathon with id: " + hackathonId + " deactivated successfully");
+        log.info("Hackathon with id: {} deactivated successfully", hackathonId);
 
         return "Hackathon deactivated successfully";
     }
@@ -66,27 +68,33 @@ public class HackathonService {
     public String assignUserToHackathon(Long hackathonId, Long userId) {
 
         Hackathon hackathon = hackathonRepository.findById(hackathonId)
-                .orElseThrow(() -> new ResourceNotFoundException(String.format("Hackathon with id: %d not found", hackathonId)));
+                .orElseThrow(() -> new HackathonException(String.format("Hackathon with id: %d not found", hackathonId),
+                        HttpStatus.NOT_FOUND));
 
         hackathon.addUserToHackathonParticipants(userId);
 
-        hackathonRepository.save(hackathon);
+        saveToRepository(hackathon);
 
-        log.info("User with id: " + userId + " successfully added to hackathon with id: " + hackathonId);
+        log.info("User with id: {} successfully added to hackathon with id: {}", userId, hackathonId);
 
         return "User successfully assigned to " + hackathon.getName() + " hackathon";
     }
 
     public String removeUserFromHackathonParticipants(Long hackathonId, Long userId) {
         Hackathon hackathon = hackathonRepository.findById(hackathonId)
-                .orElseThrow(() -> new ResourceNotFoundException(String.format("Hackathon with id: %d not found", hackathonId)));
+                .orElseThrow(() -> new HackathonException(String.format("Hackathon with id: %d not found", hackathonId),
+                        HttpStatus.NOT_FOUND));
 
         hackathon.removeUserFromHackathonParticipants(userId);
 
-        hackathonRepository.save(hackathon);
+        saveToRepository(hackathon);
 
-        log.info("User with id: " + userId + " successfully removed from hackathon with id: " + hackathonId);
+        log.info("User with id: {} successfully removed from hackathon with id: {}", userId, hackathonId);
 
         return "User successfully removed from " + hackathon.getName() + " hackathon";
+    }
+
+    private Hackathon saveToRepository(Hackathon hackathon) {
+        return hackathonRepository.save(hackathon);
     }
 }

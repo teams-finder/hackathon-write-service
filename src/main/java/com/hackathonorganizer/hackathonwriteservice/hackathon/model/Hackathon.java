@@ -1,8 +1,6 @@
 package com.hackathonorganizer.hackathonwriteservice.hackathon.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.hackathonorganizer.hackathonwriteservice.hackathon.exception.ResourceAlreadyExistsException;
-import com.hackathonorganizer.hackathonwriteservice.hackathon.exception.ResourceNotFoundException;
 import com.hackathonorganizer.hackathonwriteservice.team.model.Team;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -52,25 +51,19 @@ public class Hackathon {
     @ElementCollection
     @CollectionTable(name = "hackathon_participants", joinColumns = @JoinColumn(name = "hackathon_id"))
     @Column(name = "participant_id")
-    private Set<Long> hackathonParticipantsIds;
+    private Set<Long> hackathonParticipantsIds = new HashSet<>();
 
     public void addUserToHackathonParticipants(Long userId) {
 
-        if (!hackathonParticipantsIds.contains(userId)) {
-            hackathonParticipantsIds.add(userId);
-        } else {
-            log.error(String.format("Participant with id: %d is already added", userId));
-            throw new ResourceAlreadyExistsException(String.format("Participant with id: %d is already added", userId));
+        if (!hackathonParticipantsIds.add(userId)) {
+            log.info("Participant with id: {} is already added", userId);
         }
     }
 
     public void removeUserFromHackathonParticipants(Long userId) {
 
-        if (hackathonParticipantsIds.contains(userId)) {
-            hackathonParticipantsIds.remove(userId);
-        } else {
-            log.error(String.format("Participant with id: %d not found", userId));
-            throw new ResourceNotFoundException(String.format("Participant with id: %d not found", userId));
+        if (!hackathonParticipantsIds.remove(userId)) {
+            log.info("Participant with id: {} not found", userId);
         }
     }
 }

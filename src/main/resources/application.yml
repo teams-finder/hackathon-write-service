@@ -26,5 +26,5 @@ keycloak:
   resource : spring-gateway-client
   cors : true
 server:
-  port: 9090
+  port: 0
 
