@@ -4,6 +4,7 @@ import com.hackathonorganizer.hackathonwriteservice.hackathon.exception.Resource
 import com.hackathonorganizer.hackathonwriteservice.hackathon.model.Hackathon;
 import com.hackathonorganizer.hackathonwriteservice.hackathon.model.HackathonDto;
 import com.hackathonorganizer.hackathonwriteservice.hackathon.repository.HackathonRepository;
+import com.hackathonorganizer.hackathonwriteservice.hackathon.utils.HackathonMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class HackathonService {
 
         log.info("Hackathon with id: " + savedHackathon.getId() + " saved successfully");
 
-        return mapHackathonToDto(savedHackathon);
+        return HackathonMapper.mapHackathonToDto(savedHackathon);
     }
 
     public HackathonDto updateHackathonData(Hackathon hackathonUpdatedData) {
@@ -45,7 +46,7 @@ public class HackathonService {
 
         log.info("Hackathon with id: " + savedHackathon.getId() + " updated successfully");
 
-        return mapHackathonToDto(savedHackathon);
+        return HackathonMapper.mapHackathonToDto(savedHackathon);
     }
 
     public String deactivateHackathon(Long hackathonId) {
@@ -80,6 +81,8 @@ public class HackathonService {
         Hackathon hackathon = hackathonRepository.findById(hackathonId)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Hackathon with id: %d not found", hackathonId)));
 
+        System.out.println(hackathon.getHackathonParticipantsIds());
+
         hackathon.removeUserFromHackathonParticipants(userId);
 
         hackathonRepository.save(hackathon);
@@ -87,10 +90,5 @@ public class HackathonService {
         log.info("User with id: " + userId + " successfully removed from hackathon with id: " + hackathonId);
 
         return "User successfully removed from " + hackathon.getName() + " hackathon";
-    }
-
-    private HackathonDto mapHackathonToDto(Hackathon hackathon) {
-
-        return new HackathonDto(hackathon.getId(), hackathon.getName(), hackathon.getDescription());
     }
 }

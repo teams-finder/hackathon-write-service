@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/hackathon")
+@RequestMapping("/api/v1/hackathons")
 @AllArgsConstructor
 public class HackathonController {
 
@@ -34,13 +34,13 @@ public class HackathonController {
         return hackathonService.deactivateHackathon(hackathonId);
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("/{id}/participants")
     public String signUpUserToHackathon(@PathVariable("id") Long hackathonId, @RequestParam Long userId) {
 
         return hackathonService.assignUserToHackathon(hackathonId, userId);
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/{id}/participants")
     public String removeUserFromHackathon(@PathVariable("id") Long hackathonId, @RequestParam Long userId) {
 
         return hackathonService.removeUserFromHackathonParticipants(hackathonId, userId);
