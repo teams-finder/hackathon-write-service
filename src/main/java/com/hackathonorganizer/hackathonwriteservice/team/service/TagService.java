@@ -18,7 +18,7 @@ public class TagService {
     private final TagRepository tagRepository;
 
     public Tag create(TagRequest tagRequest) {
-        existsByName(tagRequest.name());
+        validateName(tagRequest.name());
         val tagToSave = Tag.builder()
                 .name(tagRequest.name())
                 .build();
@@ -26,7 +26,7 @@ public class TagService {
     }
 
     public Tag editById(Long id, TagRequest tagRequest) {
-        existsByName(tagRequest.name());
+        validateName(tagRequest.name());
         return tagRepository.findById(id)
                 .map(tagToEdit -> {
                     tagToEdit.setName(tagRequest.name());
@@ -49,12 +49,16 @@ public class TagService {
     }
 
 
-    protected boolean existsByName(String name) {
+    private boolean validateName(String name) {
         if (tagRepository.existsByNameIgnoreCase(name)) {
             log.error("Tag name {} already exists", name);
             throw new ResourceAlreadyExistsException(String.format("Tag name %s already exists", name));
         }
         return false;
+    }
+
+    protected boolean existsByName(String name) {
+        return tagRepository.existsByNameIgnoreCase(name);
     }
 
     protected Tag findByName(String name) {
