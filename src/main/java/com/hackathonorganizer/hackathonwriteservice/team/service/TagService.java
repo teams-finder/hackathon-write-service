@@ -27,12 +27,16 @@ public class TagService {
 
     public Tag editById(Long id, TagRequest tagRequest) {
         existsByName(tagRequest.name());
-        val tagToSave = tagRepository.findById(id).orElseThrow(() -> {
-            log.error(String.format("Tag id = %d not found", id));
-            throw new ResourceNotFoundException(String.format("Tag id = %d not found", id));
-        });
-        tagToSave.setName(tagRequest.name());
-        return tagRepository.save(tagToSave);
+        return tagRepository.findById(id)
+                .map(tagToEdit -> {
+                    tagToEdit.setName(tagRequest.name());
+                    return tagRepository.save(Tag.builder()
+                            .name(tagRequest.name())
+                            .build());
+                }).orElseThrow(() -> {
+                    log.error(String.format("Tag id = %d not found", id));
+                    return new ResourceNotFoundException(String.format("Tag id = %d not found", id));
+                });
     }
 
     public void deleteById(Long id) {
