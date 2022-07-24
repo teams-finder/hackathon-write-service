@@ -81,8 +81,6 @@ public class HackathonService {
         Hackathon hackathon = hackathonRepository.findById(hackathonId)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Hackathon with id: %d not found", hackathonId)));
 
-        System.out.println(hackathon.getHackathonParticipantsIds());
-
         hackathon.removeUserFromHackathonParticipants(userId);
 
         hackathonRepository.save(hackathon);
