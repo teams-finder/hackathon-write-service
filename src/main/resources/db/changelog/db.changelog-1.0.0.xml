@@ -88,4 +88,16 @@
         <addForeignKeyConstraint baseTableName="team_tags" baseColumnNames="team_id" constraintName="fk_team_tags_team_id" referencedTableName="team"
                                  referencedColumnNames="id" onUpdate="RESTRICT" onDelete="RESTRICT"/>
     </changeSet>
+
+    <changeSet id="add-hackathon-participants" author="Yankes">
+
+        <createTable tableName="hackathon_participants">
+            <column name="hackathon_id" type="bigint"/>
+            <column name="participant_id" type="bigint"/>
+        </createTable>
+
+        <addForeignKeyConstraint constraintName="fk_hackathon_hackathon_participants_id" referencedTableName="hackathon"
+                                 baseColumnNames="hackathon_id"
+                                 baseTableName="hackathon_participants" referencedColumnNames="id" onUpdate="RESTRICT" onDelete="RESTRICT"/>
+    </changeSet>
 </databaseChangeLog>

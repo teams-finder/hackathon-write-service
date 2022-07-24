@@ -14,23 +14,17 @@ public class HackathonController {
 
     private final HackathonService hackathonService;
 
-    @PostMapping(consumes = "application/json")
+    @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
     public HackathonDto createHackathon(@RequestBody Hackathon hackathon) {
 
-        System.out.println(hackathon.toString());
-
-        HackathonDto hackathonDto = hackathonService.createHackathon(hackathon);
-
-        return hackathonDto;
+        return hackathonService.createHackathon(hackathon);
     }
 
     @PatchMapping
     public HackathonDto updateHackathonInfo(@RequestBody Hackathon hackathon) {
 
-        HackathonDto hackathonDto = hackathonService.updateHackathonData(hackathon);
-
-        return hackathonDto;
+        return hackathonService.updateHackathonData(hackathon);
     }
 
     @PatchMapping("/{id}/deactivate")
@@ -38,5 +32,17 @@ public class HackathonController {
     public String deactivateHackathon(@PathVariable("id") Long hackathonId) {
 
         return hackathonService.deactivateHackathon(hackathonId);
+    }
+
+    @PostMapping("/{id}")
+    public String signUpUserToHackathon(@PathVariable("id") Long hackathonId, @RequestParam Long userId) {
+
+        return hackathonService.assignUserToHackathon(hackathonId, userId);
+    }
+
+    @PatchMapping("/{id}")
+    public String removeUserFromHackathon(@PathVariable("id") Long hackathonId, @RequestParam Long userId) {
+
+        return hackathonService.removeUserFromHackathonParticipants(hackathonId, userId);
     }
 }

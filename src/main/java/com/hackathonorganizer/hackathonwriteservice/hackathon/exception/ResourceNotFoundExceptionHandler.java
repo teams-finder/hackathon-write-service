@@ -6,12 +6,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class HackathonControllerAdvice {
+public class ResourceNotFoundExceptionHandler {
 
-    @ExceptionHandler(HackathonNotFoundException.class)
+    @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String handleHackathonNotFoundException(HackathonNotFoundException ex) {
-
-        return ex.getMessage();
+    public String handle(ResourceNotFoundException e) {
+        return e.getMessage();
     }
 }

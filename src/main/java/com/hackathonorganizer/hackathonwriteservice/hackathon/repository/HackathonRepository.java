@@ -1,4 +1,4 @@
-package com.hackathonorganizer.hackathonwriteservice.hackathon.model.repository;
+package com.hackathonorganizer.hackathonwriteservice.hackathon.repository;
 
 import com.hackathonorganizer.hackathonwriteservice.hackathon.model.Hackathon;
 import org.springframework.data.jpa.repository.JpaRepository;
