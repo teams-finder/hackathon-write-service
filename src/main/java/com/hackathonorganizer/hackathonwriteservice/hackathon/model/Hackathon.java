@@ -35,6 +35,7 @@ public class Hackathon {
     @NotEmpty
     private String organizerInfo;
 
+    @Builder.Default
     private boolean isActive = true;
 
     @NotNull

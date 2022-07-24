@@ -19,7 +19,7 @@ public class HackathonController {
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public HackathonResponse createHackathon(@RequestBody Hackathon hackathon) {
+    public HackathonResponse createHackathon(@RequestBody @Valid HackathonRequest hackathon) {
 
         return hackathonService.createHackathon(hackathon);
     }

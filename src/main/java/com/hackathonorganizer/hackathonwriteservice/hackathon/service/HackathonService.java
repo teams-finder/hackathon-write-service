@@ -18,7 +18,15 @@ public class HackathonService {
 
     private final HackathonRepository hackathonRepository;
 
-    public HackathonResponse createHackathon(Hackathon hackathon) {
+    public HackathonResponse createHackathon(HackathonRequest hackathonRequest) {
+
+        Hackathon hackathon = Hackathon.builder()
+                .name(hackathonRequest.name())
+                .description(hackathonRequest.description())
+                .organizerInfo(hackathonRequest.organizerInfo())
+                .eventStartDate(hackathonRequest.eventStartDate())
+                .eventEndDate(hackathonRequest.eventEndDate())
+                .build();
 
         Hackathon savedHackathon = saveToRepository(hackathon);
 
