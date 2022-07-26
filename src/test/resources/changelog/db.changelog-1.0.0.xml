@@ -4,7 +4,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
-    <changeSet id="create-project-structuree" author="Yankes">
+    <changeSet id="create-project-structure" author="Yankes">
 
         <createTable tableName="hackathon">
             <column name="id" type="bigint" autoIncrement="true">
@@ -89,7 +89,7 @@
                                  referencedColumnNames="id" onUpdate="RESTRICT" onDelete="RESTRICT"/>
     </changeSet>
 
-    <changeSet id="add-hackathon-participantss" author="Yankes">
+    <changeSet id="add-hackathon-participants" author="Yankes">
 
         <createTable tableName="hackathon_participants">
             <column name="hackathon_id" type="bigint"/>

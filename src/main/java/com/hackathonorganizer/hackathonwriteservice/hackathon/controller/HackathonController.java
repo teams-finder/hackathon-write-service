@@ -23,7 +23,7 @@ public class HackathonController {
         return hackathonService.createHackathon(hackathon);
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     public HackathonResponse updateHackathonInfo(@PathVariable("id") Long hackathonId,
             @RequestBody @Valid HackathonRequest hackathonRequest) {
 
@@ -37,15 +37,15 @@ public class HackathonController {
         return hackathonService.deactivateHackathon(hackathonId);
     }
 
-    @PatchMapping("/{id}/participants")
+    @PatchMapping("/{id}/participants/{userId}")
     public String signUpUserToHackathon(@PathVariable("id") Long hackathonId,
-            @RequestParam Long userId) {
+            @PathVariable("userId") Long userId) {
 
         return hackathonService.assignUserToHackathon(hackathonId, userId);
     }
 
-    @PatchMapping("/{id}/participants/remove")
-    public String removeUserFromHackathon(@PathVariable("id") Long hackathonId, @RequestParam Long userId) {
+    @PatchMapping("/{id}/participants/{userId}/remove")
+    public String removeUserFromHackathon(@PathVariable("id") Long hackathonId, @PathVariable("userId") Long userId) {
 
         return hackathonService.removeUserFromHackathonParticipants(hackathonId, userId);
     }

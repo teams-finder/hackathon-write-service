@@ -7,5 +7,3 @@ spring:
 
   liquibase:
     change-log: classpath:changelog/db.changelog-master.xml
-#server:
-#  port: 0

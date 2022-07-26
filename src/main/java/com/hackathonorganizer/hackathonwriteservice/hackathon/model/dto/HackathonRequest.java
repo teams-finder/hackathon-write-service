@@ -8,9 +8,6 @@ import java.time.LocalDateTime;
 
 public record HackathonRequest(
 
-        @NotNull
-        Long id,
-
         @NotEmpty
         String name,
 
