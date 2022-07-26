@@ -1,8 +1,7 @@
 package com.hackathonorganizer.hackathonwriteservice.hackathon.controller;
 
-import com.hackathonorganizer.hackathonwriteservice.hackathon.model.Hackathon;
-import com.hackathonorganizer.hackathonwriteservice.hackathon.model.dto.HackathonResponse;
 import com.hackathonorganizer.hackathonwriteservice.hackathon.model.dto.HackathonRequest;
+import com.hackathonorganizer.hackathonwriteservice.hackathon.model.dto.HackathonResponse;
 import com.hackathonorganizer.hackathonwriteservice.hackathon.service.HackathonService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,9 +25,10 @@ public class HackathonController {
 
     @PutMapping
     public HackathonResponse updateHackathonInfo(@PathVariable("id") Long hackathonId,
-                                                 @RequestBody @Valid HackathonRequest hackathonRequest) {
+            @RequestBody @Valid HackathonRequest hackathonRequest) {
 
-        return hackathonService.updateHackathonData(hackathonId, hackathonRequest);
+        return hackathonService.updateHackathonData(hackathonId,
+                hackathonRequest);
     }
 
     @PatchMapping("/{id}/deactivate")
@@ -38,7 +38,8 @@ public class HackathonController {
     }
 
     @PatchMapping("/{id}/participants")
-    public String signUpUserToHackathon(@PathVariable("id") Long hackathonId, @RequestParam Long userId) {
+    public String signUpUserToHackathon(@PathVariable("id") Long hackathonId,
+            @RequestParam Long userId) {
 
         return hackathonService.assignUserToHackathon(hackathonId, userId);
     }

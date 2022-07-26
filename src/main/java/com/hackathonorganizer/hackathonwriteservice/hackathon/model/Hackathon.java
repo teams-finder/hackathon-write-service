@@ -39,18 +39,19 @@ public class Hackathon {
     private boolean isActive = true;
 
     @NotNull
-    @JsonFormat(pattern="HH:mm:ss dd-MM-yyyy")
+    @JsonFormat(pattern = "HH:mm:ss dd-MM-yyyy")
     private LocalDateTime eventStartDate;
 
     @NotNull
-    @JsonFormat(pattern="HH:mm:ss dd-MM-yyyy")
+    @JsonFormat(pattern = "HH:mm:ss dd-MM-yyyy")
     private LocalDateTime eventEndDate;
 
     @OneToMany(mappedBy = "hackathon")
     private List<Team> teams;
 
     @ElementCollection
-    @CollectionTable(name = "hackathon_participants", joinColumns = @JoinColumn(name = "hackathon_id"))
+    @CollectionTable(name = "hackathon_participants", joinColumns =
+    @JoinColumn(name = "hackathon_id"))
     @Column(name = "participant_id")
     private Set<Long> hackathonParticipantsIds = new HashSet<>();
 

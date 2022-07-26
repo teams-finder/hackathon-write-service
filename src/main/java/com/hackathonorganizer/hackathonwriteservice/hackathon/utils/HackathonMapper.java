@@ -9,6 +9,7 @@ public class HackathonMapper {
 
     public static HackathonResponse mapToDto(Hackathon hackathon) {
 
-        return new HackathonResponse(hackathon.getId(), hackathon.getName(), hackathon.getDescription());
+        return new HackathonResponse(hackathon.getId(), hackathon.getName(),
+                hackathon.getDescription());
     }
 }

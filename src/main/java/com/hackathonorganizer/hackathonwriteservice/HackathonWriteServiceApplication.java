@@ -10,13 +10,13 @@ import org.springframework.context.annotation.Bean;
 @EnableEurekaClient
 public class HackathonWriteServiceApplication {
 
-	@Bean
-	public KeycloakSpringBootConfigResolver KeycloakConfigResolver() {
-		return new KeycloakSpringBootConfigResolver();
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(HackathonWriteServiceApplication.class, args);
+    }
 
-	public static void main(String[] args) {
-		SpringApplication.run(HackathonWriteServiceApplication.class, args);
-	}
+    @Bean
+    public KeycloakSpringBootConfigResolver KeycloakConfigResolver() {
+        return new KeycloakSpringBootConfigResolver();
+    }
 
 }

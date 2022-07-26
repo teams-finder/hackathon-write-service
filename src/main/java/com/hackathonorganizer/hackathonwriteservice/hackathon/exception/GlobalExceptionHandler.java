@@ -14,7 +14,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(HackathonException.class)
     public ResponseEntity<ErrorResponse> handleHackathonException(HackathonException ex, WebRequest request) {
 
-        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), List.of(ex.getMessage()));
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(),
+                List.of(ex.getMessage()));
 
         return ResponseEntity.status(ex.getHttpStatus()).body(errorResponse);
     }
