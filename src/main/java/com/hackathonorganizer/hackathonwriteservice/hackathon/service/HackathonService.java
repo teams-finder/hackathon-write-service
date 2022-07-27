@@ -87,12 +87,12 @@ public class HackathonService {
 
         hackathon.addUserToHackathonParticipants(userId);
 
-        saveToRepository(hackathon);
+        Hackathon savedHackathon = saveToRepository(hackathon);
 
         log.info("User with id: {} successfully added to hackathon with id: " +
                 "{}", userId, hackathonId);
 
-        return "User successfully assigned to " + hackathon.getName() + " " +
+        return "User successfully assigned to " + savedHackathon.getName() + " " +
                 "hackathon";
     }
 
@@ -105,12 +105,12 @@ public class HackathonService {
 
         hackathon.removeUserFromHackathonParticipants(userId);
 
-        saveToRepository(hackathon);
+        Hackathon savedHackathon =saveToRepository(hackathon);
 
         log.info("User with id: {} successfully removed from hackathon with " +
                 "id: {}", userId, hackathonId);
 
-        return "User successfully removed from " + hackathon.getName() + " " +
+        return "User successfully removed from " + savedHackathon.getName() + " " +
                 "hackathon";
     }
 

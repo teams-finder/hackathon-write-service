@@ -12,7 +12,7 @@ import java.util.List;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(HackathonException.class)
-    public ResponseEntity<ErrorResponse> handleHackathonException(HackathonException ex, WebRequest request) {
+    public ResponseEntity<ErrorResponse> handleHackathonException(HackathonException ex) {
 
         ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(),
                 List.of(ex.getMessage()));

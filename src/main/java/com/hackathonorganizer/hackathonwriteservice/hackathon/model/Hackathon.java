@@ -50,9 +50,10 @@ public class Hackathon {
     private List<Team> teams;
 
     @ElementCollection
-    @CollectionTable(name = "hackathon_participants", joinColumns =
-    @JoinColumn(name = "hackathon_id"))
+    @CollectionTable(name = "hackathon_participants",
+            joinColumns = @JoinColumn(name = "hackathon_id"))
     @Column(name = "participant_id")
+    @Builder.Default
     private Set<Long> hackathonParticipantsIds = new HashSet<>();
 
     public void addUserToHackathonParticipants(Long userId) {

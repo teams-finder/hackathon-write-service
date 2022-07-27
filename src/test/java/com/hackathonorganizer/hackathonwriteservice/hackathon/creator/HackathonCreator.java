@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 
 @Component
-@Transactional
 @RequiredArgsConstructor
 public class HackathonCreator {
 
