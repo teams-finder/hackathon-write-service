@@ -7,7 +7,7 @@ spring:
   datasource:
     username: postgres
     password: qwerty
-    url: jdbc:postgresql://localhost:5432/hackathon_db
+    url: jdbc:postgresql://localhost:5434/hackathon_db
   jpa:
     properties:
       hibernate:
