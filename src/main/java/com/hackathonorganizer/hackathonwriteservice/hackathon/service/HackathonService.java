@@ -62,7 +62,7 @@ public class HackathonService {
         return HackathonMapper.mapToDto(savedHackathon);
     }
 
-    public String deactivateHackathon(Long hackathonId) {
+    public void deactivateHackathon(Long hackathonId) {
 
         Hackathon hackathon = hackathonRepository.findById(hackathonId)
                 .orElseThrow(() -> new HackathonException(String.format(
@@ -74,11 +74,9 @@ public class HackathonService {
         saveToRepository(hackathon);
 
         log.info("Hackathon with id: {} deactivated successfully", hackathonId);
-
-        return "Hackathon deactivated successfully";
     }
 
-    public String assignUserToHackathon(Long hackathonId, Long userId) {
+    public void assignUserToHackathon(Long hackathonId, Long userId) {
 
         Hackathon hackathon = hackathonRepository.findById(hackathonId)
                 .orElseThrow(() -> new HackathonException(String.format(
@@ -87,31 +85,25 @@ public class HackathonService {
 
         hackathon.addUserToHackathonParticipants(userId);
 
-        Hackathon savedHackathon = saveToRepository(hackathon);
+        saveToRepository(hackathon);
 
         log.info("User with id: {} successfully added to hackathon with id: " +
                 "{}", userId, hackathonId);
-
-        return "User successfully assigned to " + savedHackathon.getName() + " " +
-                "hackathon";
     }
 
-    public String removeUserFromHackathonParticipants(Long hackathonId,
+    public void removeUserFromHackathonParticipants(Long hackathonId,
             Long userId) {
         Hackathon hackathon = hackathonRepository.findById(hackathonId)
-                .orElseThrow(() -> new HackathonException(String.format(
-                        "Hackathon with id: %d not found", hackathonId),
-                        HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new HackathonException(
+                String.format("Hackathon with id: %d not found", hackathonId),
+                HttpStatus.NOT_FOUND));
 
         hackathon.removeUserFromHackathonParticipants(userId);
 
-        Hackathon savedHackathon =saveToRepository(hackathon);
+        saveToRepository(hackathon);
 
         log.info("User with id: {} successfully removed from hackathon with " +
                 "id: {}", userId, hackathonId);
-
-        return "User successfully removed from " + savedHackathon.getName() + " " +
-                "hackathon";
     }
 
     private Hackathon saveToRepository(Hackathon hackathon) {

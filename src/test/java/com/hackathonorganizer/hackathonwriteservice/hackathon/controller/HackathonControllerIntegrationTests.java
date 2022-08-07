@@ -1,6 +1,6 @@
 package com.hackathonorganizer.hackathonwriteservice.hackathon.controller;
 
-import com.hackathonorganizer.hackathonwriteservice.IntegrationTest;
+import com.hackathonorganizer.hackathonwriteservice.BaseIntegrationTest;
 import com.hackathonorganizer.hackathonwriteservice.hackathon.creator.HackathonCreator;
 import com.hackathonorganizer.hackathonwriteservice.hackathon.model.Hackathon;
 import com.hackathonorganizer.hackathonwriteservice.hackathon.model.dto.HackathonRequest;
@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-public class HackathonControllerIntegrationTests extends IntegrationTest {
+public class HackathonControllerIntegrationTests extends BaseIntegrationTest {
 
     @Autowired
     private HackathonRepository hackathonRepository;
@@ -65,8 +65,8 @@ public class HackathonControllerIntegrationTests extends IntegrationTest {
 
         // when
         ResultActions resultActions =
-                mockMvc.perform(putJsonRequest(url + savedHackathon.getId(),
-                        request));
+                mockMvc.perform(putJsonRequest(url,
+                        request, "/", String.valueOf(savedHackathon.getId())));
 
         // then
         resultActions.andExpect(status().isOk());
@@ -79,14 +79,14 @@ public class HackathonControllerIntegrationTests extends IntegrationTest {
     @Test
     void shouldThrowHackathonNotFound() throws Exception {
         // given
-        String url = "/api/v1/hackathons/999";
+        String url = "/api/v1/hackathons/";
 
         HackathonRequest request = buildHackathonRequest();
 
         // when
         ResultActions resultActions =
                 mockMvc.perform(putJsonRequest(url,
-                        request));
+                        request, "999"));
 
         // then
         resultActions.andExpect(status().isNotFound());
@@ -103,16 +103,12 @@ public class HackathonControllerIntegrationTests extends IntegrationTest {
 
         Hackathon savedHackathon = hackathonCreator.createHackathon();
 
-        url += savedHackathon.getId() + "/deactivate";
-
         // when
         ResultActions resultActions = mockMvc.perform(patchJsonRequest(url,
-                null));
+                null, String.valueOf(savedHackathon.getId()), "deactivate"));
 
         // then
         resultActions.andExpect(status().isOk());
-
-        resultActions.andExpect(jsonPath("$").value("Hackathon deactivated successfully"));
     }
 
     @Test
@@ -123,19 +119,14 @@ public class HackathonControllerIntegrationTests extends IntegrationTest {
 
         Hackathon savedHackathon = hackathonCreator.createHackathon();
 
-        url += savedHackathon.getId() + "/participants/" + participantId;
-
         // when
         ResultActions resultActions =
                 mockMvc.perform(patchJsonRequest(url,
-                        null));
+                        null, String.valueOf(savedHackathon.getId()),
+                        "participants", participantId));
 
         // then
         resultActions.andExpect(status().isOk());
-
-        resultActions.andExpect(jsonPath("$")
-                .value("User successfully assigned to " + savedHackathon.getName() +
-                        " hackathon"));
     }
 
 
@@ -147,28 +138,22 @@ public class HackathonControllerIntegrationTests extends IntegrationTest {
 
         Hackathon savedHackathon = hackathonCreator.createHackathon();
 
-        url += savedHackathon.getId() + "/participants/" + participantId +
-                "/remove";
-
         // when
         ResultActions resultActions =
                 mockMvc.perform(patchJsonRequest(url,
-                        null));
+                        null, String.valueOf(savedHackathon.getId()),
+                        "participants", participantId, "remove"));
 
         // then
         resultActions.andExpect(status().isOk());
-
-        resultActions.andExpect(jsonPath("$")
-                .value("User successfully removed from " + savedHackathon.getName() + " " +
-                        "hackathon"));
     }
 
     private HackathonRequest buildHackathonRequest() {
         String name = "Hackathon";
         String desc = "Hackathon desc";
         String organizerInfo = "Organizer info";
-        LocalDateTime eventStartDate = LocalDateTime.now();
-        LocalDateTime eventEndDate = LocalDateTime.now().plusDays(1);
+        LocalDateTime eventStartDate = LocalDateTime.of(2022, 12, 12, 13, 0);
+        LocalDateTime eventEndDate = LocalDateTime.of(2022, 12, 13, 13, 0);
 
         return new HackathonRequest(name, desc,
                 organizerInfo, eventStartDate, eventEndDate);

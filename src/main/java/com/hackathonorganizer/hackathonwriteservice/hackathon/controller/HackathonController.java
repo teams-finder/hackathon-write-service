@@ -32,21 +32,22 @@ public class HackathonController {
     }
 
     @PatchMapping("/{id}/deactivate")
-    public String deactivateHackathon(@PathVariable("id") Long hackathonId) {
+    public void deactivateHackathon(@PathVariable("id") Long hackathonId) {
 
-        return hackathonService.deactivateHackathon(hackathonId);
+        hackathonService.deactivateHackathon(hackathonId);
     }
 
     @PatchMapping("/{id}/participants/{userId}")
-    public String signUpUserToHackathon(@PathVariable("id") Long hackathonId,
+    public void signUpUserToHackathon(@PathVariable("id") Long hackathonId,
             @PathVariable("userId") Long userId) {
 
-        return hackathonService.assignUserToHackathon(hackathonId, userId);
+        hackathonService.assignUserToHackathon(hackathonId, userId);
     }
 
     @PatchMapping("/{id}/participants/{userId}/remove")
-    public String removeUserFromHackathon(@PathVariable("id") Long hackathonId, @PathVariable("userId") Long userId) {
+    public void removeUserFromHackathon(@PathVariable("id") Long hackathonId,
+            @PathVariable("userId") Long userId) {
 
-        return hackathonService.removeUserFromHackathonParticipants(hackathonId, userId);
+        hackathonService.removeUserFromHackathonParticipants(hackathonId, userId);
     }
 }

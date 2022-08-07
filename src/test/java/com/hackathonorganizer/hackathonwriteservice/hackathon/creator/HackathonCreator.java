@@ -19,8 +19,8 @@ public class HackathonCreator {
         String name = "Hackathon edited";
         String description = "Hackathon desc edited";
         String organizerInfo = "Organizer info";
-        LocalDateTime eventStartDate = LocalDateTime.now();
-        LocalDateTime eventEndDate = LocalDateTime.now().plusDays(1);
+        LocalDateTime eventStartDate = LocalDateTime.of(2022, 12, 12, 13, 0);
+        LocalDateTime eventEndDate = LocalDateTime.of(2022, 12, 13, 13, 0);
 
         return hackathonRepository.save(
                 Hackathon.builder()

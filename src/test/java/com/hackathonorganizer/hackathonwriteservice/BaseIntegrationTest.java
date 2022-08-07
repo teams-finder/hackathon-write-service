@@ -15,6 +15,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.testcontainers.containers.PostgreSQLContainer;
 
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
@@ -23,7 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @TestInstance(PER_CLASS)
 @ActiveProfiles("test")
 @SpringBootTest(classes = HackathonWriteServiceApplication.class)
-public class IntegrationTest {
+public class BaseIntegrationTest {
 
     @Autowired
     protected MockMvc mockMvc;
@@ -49,22 +51,22 @@ public class IntegrationTest {
     }
 
     protected MockHttpServletRequestBuilder postJsonRequest(String url,
-            Object body) throws Exception {
-        return post(url)
+            Object body, String... urlVariables) throws Exception {
+        return post(url + String.join("/", urlVariables))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(body));
     }
 
     protected MockHttpServletRequestBuilder putJsonRequest(String url,
-            Object body) throws Exception {
-        return put(url)
+            Object body, String... urlVariables) throws Exception {
+        return put(url + String.join("/", urlVariables))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(body));
     }
 
     protected MockHttpServletRequestBuilder patchJsonRequest(String url,
-            Object body) throws Exception {
-        return patch(url)
+            Object body, String... urlVariables) throws Exception {
+        return patch(url + String.join("/", urlVariables))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(body));
     }

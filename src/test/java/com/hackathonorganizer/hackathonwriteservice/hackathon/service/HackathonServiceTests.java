@@ -40,25 +40,22 @@ public class HackathonServiceTests {
             .description("Desc")
             .organizerInfo("Org Info")
             .isActive(true)
-            .eventStartDate(LocalDateTime.now())
-            .eventEndDate(LocalDateTime.now().plusDays(2))
+            .eventStartDate(LocalDateTime.of(2022, 12, 12, 13, 0))
+            .eventEndDate(LocalDateTime.of(2022, 12, 13, 13, 0))
             .teams(new ArrayList<>())
             .build();
 
     @Test
     void shouldCreateNewHackathon() {
         // given
-
         doAnswer(invocation -> invocation.getArgument(0)).when(hackathonRepository)
                 .save(any(Hackathon.class));
 
         // when
-
         HackathonResponse hackathonResponse =
                 hackathonService.createHackathon(buildHackathonRequest());
 
         // then
-
         verify(hackathonRepository).save(hackathonCaptor.capture());
         Hackathon captured = hackathonCaptor.getValue();
 
@@ -69,7 +66,6 @@ public class HackathonServiceTests {
     @Test
     void shouldEditHackathon() {
         // given
-
         Long hackathonId = 5L;
 
         when(hackathonRepository.findById(hackathonId)).thenReturn(Optional.of(mockHackathon));
@@ -77,7 +73,6 @@ public class HackathonServiceTests {
                 .save(any(Hackathon.class));
 
         // when
-
         HackathonResponse hackathonResponse = hackathonService
                 .updateHackathonData(5L, new HackathonRequest("Edited " +
                         "Hackathon",
@@ -85,7 +80,6 @@ public class HackathonServiceTests {
                         LocalDateTime.now(), LocalDateTime.now().plusDays(1)));
 
         // then
-
         verify(hackathonRepository).save(hackathonCaptor.capture());
         Hackathon captured = hackathonCaptor.getValue();
 
@@ -96,13 +90,11 @@ public class HackathonServiceTests {
     @Test
     void shouldThrowErrorWhenHackathonWithGivenIdIsNotFound() {
         //given
-
         Long hackathonId = 6L;
 
         when(hackathonRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         //when
-
         Throwable thrown =
                 catchThrowable(() -> hackathonService.updateHackathonData(hackathonId,
                         new HackathonRequest("Edited Hackathon",
@@ -111,7 +103,6 @@ public class HackathonServiceTests {
                                 LocalDateTime.now().plusDays(1))));
 
         //then
-
         verify(hackathonRepository).findById(anyLong());
         assertThat(thrown).isExactlyInstanceOf(HackathonException.class);
     }
@@ -119,28 +110,20 @@ public class HackathonServiceTests {
     @Test
     void shouldDeactivateHackathon() {
         // given
-
         Long hackathonId = 5L;
 
         when(hackathonRepository.findById(hackathonId)).thenReturn(Optional.of(mockHackathon));
 
         // when
-
-        String resultMessage =
-                hackathonService.deactivateHackathon(hackathonId);
+        hackathonService.deactivateHackathon(hackathonId);
 
         // then
-
         verify(hackathonRepository).findById(anyLong());
-
-        assertThat(resultMessage).isEqualTo("Hackathon deactivated " +
-                "successfully");
     }
 
     @Test
     void shouldAddUserToHackathonParticipants() {
         // given
-
         Long hackathonId = 5L;
         Long userId = 55L;
 
@@ -149,23 +132,19 @@ public class HackathonServiceTests {
                 .save(any(Hackathon.class));
 
         // when
-        String resultMessage =
-                hackathonService.assignUserToHackathon(hackathonId, userId);
+        hackathonService.assignUserToHackathon(hackathonId, userId);
 
         // then
-
         verify(hackathonRepository).findById(anyLong());
         verify(hackathonRepository).save(hackathonCaptor.capture());
         Hackathon captured = hackathonCaptor.getValue();
 
-        assertThat(resultMessage).isEqualTo("User successfully assigned to " + captured.getName() +
-                " hackathon");
+        assertThat(captured.getHackathonParticipantsIds().size()).isEqualTo(1);
     }
 
     @Test
     void shouldNotAddSameUserTwiceToHackathonParticipants() {
         // given
-
         Long hackathonId = 5L;
         Long userId = 55L;
 
@@ -176,11 +155,9 @@ public class HackathonServiceTests {
                 .save(any(Hackathon.class));
 
         // when
-
         hackathonService.assignUserToHackathon(hackathonId, userId);
 
         // then
-
         verify(hackathonRepository).findById(anyLong());
         verify(hackathonRepository).save(hackathonCaptor.capture());
 
@@ -193,7 +170,6 @@ public class HackathonServiceTests {
     @Test
     void shouldRemoveUserFromHackathonParticipants() {
         // given
-
         Long hackathonId = 5L;
         Long userId = 55L;
 
@@ -202,18 +178,14 @@ public class HackathonServiceTests {
                 .save(any(Hackathon.class));
 
         // when
-
-        String resultMessage =
-                hackathonService.removeUserFromHackathonParticipants(hackathonId, userId);
+        hackathonService.removeUserFromHackathonParticipants(hackathonId, userId);
 
         // then
-
         verify(hackathonRepository).findById(anyLong());
         verify(hackathonRepository).save(hackathonCaptor.capture());
         Hackathon captured = hackathonCaptor.getValue();
 
-        assertThat(resultMessage).isEqualTo("User successfully removed from " + captured.getName() +
-                " hackathon");
+        assertThat(captured.getHackathonParticipantsIds().size()).isEqualTo(0);
     }
 
     private HackathonRequest buildHackathonRequest() {
@@ -226,5 +198,4 @@ public class HackathonServiceTests {
         return new HackathonRequest(name, desc,
                 organizerInfo, eventStartDate, eventEndDate);
     }
-
 }
