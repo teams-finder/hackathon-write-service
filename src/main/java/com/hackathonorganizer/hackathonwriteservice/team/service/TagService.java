@@ -18,55 +18,49 @@ public class TagService {
     private final TagRepository tagRepository;
 
     public Tag create(TagRequest tagRequest) {
-        validateName(tagRequest.name());
-        val tagToSave = Tag.builder()
-                .name(tagRequest.name())
-                .build();
+
+        val tagToSave = Tag.builder().name(tagRequest.name()).build();
         return tagRepository.save(tagToSave);
     }
 
     public Tag editById(Long id, TagRequest tagRequest) {
-        validateName(tagRequest.name());
-        return tagRepository.findById(id)
-                .map(tagToEdit -> {
-                    tagToEdit.setName(tagRequest.name());
+
+        return tagRepository.findById(id).map(tagToEdit -> {
+            tagToEdit.setName(tagRequest.name());
+
                     return tagRepository.save(Tag.builder()
                             .name(tagRequest.name())
                             .build());
                 }).orElseThrow(() -> {
-                    log.error(String.format("Tag id = %d not found", id));
-                    return new ResourceNotFoundException(String.format("Tag id = %d not found", id));
+                    log.info(String.format("Tag id: %d not found", id));
+                    return new ResourceNotFoundException(String.format("Tag " +
+                            "id: %d not found", id));
                 });
     }
 
     public void deleteById(Long id) {
+
         if (tagRepository.existsById(id)) {
             tagRepository.deleteById(id);
         } else {
-            throw new ResourceNotFoundException(String.format("Tag id = %d not found", id));
+            throw new ResourceNotFoundException(String.format("Tag id: %d " +
+                    "not found", id));
         }
 
-    }
-
-
-    private boolean validateName(String name) {
-        if (tagRepository.existsByNameIgnoreCase(name)) {
-            log.error("Tag name {} already exists", name);
-            throw new ResourceAlreadyExistsException(String.format("Tag name %s already exists", name));
-        }
-        return false;
     }
 
     protected boolean existsByName(String name) {
+
         return tagRepository.existsByNameIgnoreCase(name);
     }
 
     protected Tag findByName(String name) {
-        return tagRepository.findByNameIgnoreCase(name)
-                .orElseThrow(() -> {
-                    log.error(String.format("Tag name %s not found", name));
-                    throw new ResourceAlreadyExistsException(String.format("Tag name %s not found", name));
-                });
+
+        return tagRepository.findByNameIgnoreCase(name).orElseThrow(() -> {
+                    log.info(String.format("Tag name %s not found", name));
+                    throw new ResourceAlreadyExistsException(String.format(
+                            "Tag name %s not found", name));
+        });
     }
 
 

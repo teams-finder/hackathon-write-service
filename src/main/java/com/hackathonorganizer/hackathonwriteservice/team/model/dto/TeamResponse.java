@@ -12,4 +12,5 @@ public record TeamResponse(
         Set<Long> teamMembersIds,
         List<Tag> tags
 ) {
+
 }

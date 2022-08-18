@@ -26,8 +26,9 @@ public class TagController {
     }
 
     @PutMapping("/{id}")
-    public Tag edit(@PathVariable Long id, @RequestBody @Valid TagRequest tagRequest) {
-        log.info("Processing new tag edit id = {} request {}", id, tagRequest);
+    public Tag edit(@PathVariable Long id,
+            @RequestBody @Valid TagRequest tagRequest) {
+        log.info("Processing new tag edit id: {} request {}", id, tagRequest);
         return tagService.editById(id, tagRequest);
     }
 

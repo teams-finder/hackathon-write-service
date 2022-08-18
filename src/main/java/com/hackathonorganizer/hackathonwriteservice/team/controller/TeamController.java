@@ -24,14 +24,10 @@ public class TeamController {
     }
 
     @PutMapping("/{id}")
-    public TeamResponse edit(@PathVariable Long id, @RequestBody TeamRequest teamRequest) {
-        log.info("Processing new team id = {} edit request {}", id, teamRequest);
+    public TeamResponse edit(@PathVariable Long id,
+            @RequestBody TeamRequest teamRequest) {
+        log.info("Processing new team id: {} edit request {}", id,
+                teamRequest);
         return teamService.editById(id, teamRequest);
-    }
-
-    @PatchMapping("/{id}")
-    public TeamResponse editPartial(@PathVariable Long id, @RequestBody TeamRequest teamRequest) {
-        log.info("Processing new team id = {} partial edit request {}", id, teamRequest);
-        return teamService.editPartialById(id, teamRequest);
     }
 }

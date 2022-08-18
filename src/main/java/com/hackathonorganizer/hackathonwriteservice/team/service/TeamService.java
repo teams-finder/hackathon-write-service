@@ -25,69 +25,45 @@ public class TeamService {
 
 
     private final TeamRepository teamRepository;
+
     private final TagService tagService;
+
     //TODO change to service when it will be ready
     private final HackathonRepository hackathonRepository;
 
     public TeamResponse create(TeamRequest teamRequest) {
+
         val teamToSave = Team.builder()
                 .ownerId(teamRequest.ownerId())
-                .hackathon(getHackathon(teamRequest.hackathonId()))
+                .hackathon(getHackathonById(teamRequest.hackathonId()))
                 .teamMembersIds(teamRequest.teamMembersIds())
-                .tags(getTags(teamRequest.tags()))
+                .tags(teamRequest.tags())
                 .build();
         log.info("Trying to save new team {}", teamToSave);
         return TeamMapper.toResponse(teamRepository.save(teamToSave));
     }
 
     public TeamResponse editById(Long id, TeamRequest teamRequest) {
-        return teamRepository.findById(id)
-                .map(teamToEdit -> {
-                    teamToEdit.setOwnerId(teamRequest.ownerId());
-                    teamToEdit.setHackathon(getHackathon(teamRequest.hackathonId()));
-                    teamToEdit.setTeamMembersIds(teamRequest.teamMembersIds());
-                    teamToEdit.setTags(getTags(teamRequest.tags()));
-                    return TeamMapper.toResponse(teamRepository.save(teamToEdit));
-                }).orElseThrow(() -> {
-                    log.error(String.format("Team id = %d not found", id));
-                    return new ResourceNotFoundException(String.format("Team id = %d not found", id));
-                });
+
+        return teamRepository.findById(id).map(teamToEdit -> {
+            teamToEdit.setOwnerId(teamRequest.ownerId());
+            teamToEdit.setHackathon(getHackathonById(teamRequest.hackathonId()));
+            teamToEdit.setTeamMembersIds(teamRequest.teamMembersIds());
+            teamToEdit.setTags(teamRequest.tags());
+            return TeamMapper.toResponse(teamRepository.save(teamToEdit));
+        }).orElseThrow(() -> {
+            log.info(String.format("Team id: %d not found", id));
+            return new ResourceNotFoundException(String.format("Team " +
+                    "id: %d not found", id));
+        });
     }
 
-    public TeamResponse editPartialById(Long id, TeamRequest teamRequest) {
-        return teamRepository.findById(id)
-                .map(teamToEdit -> {
-                    if (teamRequest.ownerId() != null) {
-                        teamToEdit.setOwnerId(teamRequest.ownerId());
-                    }
-                    if (teamRequest.hackathonId() != null) {
-                        teamToEdit.setHackathon(getHackathon(teamRequest.hackathonId()));
-                    }
-                    if (teamRequest.teamMembersIds() != null) {
-                        teamToEdit.setTeamMembersIds(teamRequest.teamMembersIds());
-                    }
-                    if (teamRequest.tags() != null) {
-                        teamToEdit.setTags(getTags(teamRequest.tags()));
-                    }
-                    return TeamMapper.toResponse(teamRepository.save(teamToEdit));
-                }).orElseThrow(() -> {
-                    log.error(String.format("Team id = %d not found", id));
-                    return new ResourceNotFoundException(String.format("Team id = %d not found", id));
-                });
-    }
+    private Hackathon getHackathonById(Long hackathonId) {
 
-
-    private List<Tag> getTags(List<TagRequest> tags) {
-        val tagsToSave = new ArrayList<Tag>();
-        tags.forEach(tag -> tagsToSave.add(tagService.existsByName(tag.name()) ? tagService.findByName(tag.name()) : tagService.create(tag)));
-        return tagsToSave;
-    }
-
-    private Hackathon getHackathon(Long hackathonId) {
-        return hackathonRepository.findById(hackathonId)
-                .orElseThrow(() -> {
-                    log.error("Hacathon id = {} not found", hackathonId);
-                    throw new ResourceNotFoundException(String.format("Hacathon id = %d not found", hackathonId));
-                });
+        return hackathonRepository.findById(hackathonId).orElseThrow(() -> {
+            log.info("Hacathon id: {} not found", hackathonId);
+            throw new ResourceNotFoundException(String.format(
+                    "Hacathon id: %d not found", hackathonId));
+        });
     }
 }
