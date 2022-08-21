@@ -1,8 +1,7 @@
 package com.hackathonorganizer.hackathonwriteservice.team.model;
 
 import com.hackathonorganizer.hackathonwriteservice.hackathon.model.Hackathon;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -12,6 +11,9 @@ import java.util.Set;
 @Entity
 @Setter
 @Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Team {
 
     @Id
@@ -26,7 +28,8 @@ public class Team {
     private Hackathon hackathon;
 
     @ElementCollection
-    @CollectionTable(name = "team_members", joinColumns = @JoinColumn(name = "team_id"))
+    @CollectionTable(name = "team_members", joinColumns = @JoinColumn(name =
+            "team_id"))
     @Column(name = "team_member_id")
     private Set<Long> teamMembersIds;
 
